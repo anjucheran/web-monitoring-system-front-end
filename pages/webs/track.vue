@@ -1,33 +1,58 @@
 <template>
 <div>
     <navbar />
-    <b-container class="main">
-        <h1>Track Web Sites</h1>
-        <webbox />
-    </b-container>
+    <div class="main">
+        <b-row>
+            <b-col cols="3" v-for="(web, index) in webs" :key="index">
+                <webbox v-bind="web" />
+            </b-col>
+        </b-row>
+    </div>
 </div>
 </template>
 
 <script>
-import Navbar from '~/components/Navbar.vue'
-import Webbox from '~/components/Webbox.vue'
+import { GET_WEBS } from "../../config";
+
+import Navbar from "~/components/Navbar.vue";
+import Webbox from "~/components/Webbox.vue";
 export default {
-    components: {
-        Navbar,
-        Webbox
+  middleware: "check-auth",
+  components: {
+    Navbar,
+    Webbox
+  },
+  data() {
+    return {
+      webs: null
+    };
+  },
+  async mounted() {
+    await this.fetchData();
+    this.$store.dispatch("track", true);
+  },
+  methods: {
+    async fetchData() {
+      const { data } = await this.$axios.get(GET_WEBS, {
+        headers: {
+          Authorization: this.$store.state.token
+        }
+      });
+      this.webs = data;
     }
-}
+  }
+};
 </script>
 
 <style scoped>
 .main {
-  margin-top: 4rem;
+  margin: 4rem 4rem;
   padding: 2rem 4rem;
-  margin-bottom: 4rem;
   position: relative;
   border: 1px solid black;
 }
 h1 {
-    text-align: center;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 </style>

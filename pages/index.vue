@@ -25,10 +25,14 @@ import Login from '~/components/Login.vue'
 import Signup from '~/components/Signup.vue'
 
 export default {
+  middleware: 'is-login',
   components: {
     AppLogo,
     Login,
     Signup
+  },
+  mounted() {
+    this.$store.dispatch('track', false);
   }
 }
 </script>

@@ -2,13 +2,13 @@
 <div>
     <navbar />
 <b-container class="main">
-    <h1>Add Web Site</h1>
+    <h1>Update Web Site</h1>
     <b-form>
         <b-form-group label="Web Name"
                         label-for="name">
             <b-form-input id="name"
                             type="text"
-                            v-model="form.name"
+                            v-model="web.name"
                             required
                             placeholder="Web Name">
             </b-form-input>
@@ -17,20 +17,20 @@
                         label-for="address">
             <b-form-input id="address"
                             type="text"
-                            v-model="form.address"
+                            v-model="address"
                             required
-                            placeholder="Web Address">
+                            placeholder="Web Address" disabled>
             </b-form-input>
         </b-form-group>
         <b-form-group label="Request Type"
                         label-for="requestType">
-            <b-form-select id="requestType" v-model="form.requestType" :options="requestTypes" class="mb-3" required />
+            <b-form-select id="requestType" v-model="web.requestType" :options="requestTypes" class="mb-3" required />
         </b-form-group>
         <b-form-group label="Request Interval (seconds)"
                         label-for="period">
             <b-form-input id="period"
                             type="text"
-                            v-model="form.period"
+                            v-model="period"
                             required
                             placeholder="Request Interval (seconds)">
             </b-form-input>
@@ -39,19 +39,19 @@
                         label-for="httpStatus">
             <b-form-input id="httpStatus"
                             type="text"
-                            v-model="form.httpStatus"
+                            v-model="web.httpStatus"
                             required
                             placeholder="HTTP Status Code">
             </b-form-input>
         </b-form-group>
-        <b-button type="submit" @click.prevent="addWeb()" variant="outline-success">Add Web</b-button>
+        <b-button type="submit" variant="outline-success">Update Web</b-button>
     </b-form>
 </b-container>
 </div>
 </template>
 
 <script>
-import { ADD_WEB } from "../../config";
+import { GET_WEB } from "../../../config";
 
 import Navbar from "~/components/Navbar.vue";
 export default {
@@ -65,26 +65,37 @@ export default {
         { value: "get", text: "GET" },
         { value: "head", text: "HEAD" }
       ],
-      form: {
+      web: {
         name: "",
-        address: "",
         requestType: "get",
         period: "",
         httpStatus: ""
-      }
+      },
+      id: "",
+      address: "",
     };
   },
   mounted() {
-    this.$store.dispatch('track', false);
+    this.$store.dispatch("track", false);
+    this.id = this.$route.params.id;
+    console.log(this.$route.params.id);
+    this.fetchData();
   },
   methods: {
-    async addWeb() {
-      await this.$axios.post(ADD_WEB, this.form, {
+    async fetchData() {
+      const web = await this.$axios.get(GET_WEB, {
+        params: {
+          id: this.id
+        },
         headers: {
           Authorization: this.$store.state.token
         }
       });
-      this.$router.push('/webs/track');
+      this.address = web.address;
+      this.web.name = web.name;
+      this.web.requestType = web.requestType;
+      this.web.period = web.period;
+      this.web.httpStatus = web.httpStatus;
     }
   }
 };

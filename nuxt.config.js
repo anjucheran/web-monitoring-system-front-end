@@ -1,3 +1,5 @@
+const baseURL = require('./config/axios').baseURL;
+
 module.exports = {
   /*
   ** Headers of the page
@@ -14,8 +16,14 @@ module.exports = {
     ]
   },
   modules: [
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    '@nuxtjs/font-awesome',
+    '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
+  axios: {
+    baseURL: baseURL
+  },
   /*
   ** Customize the progress bar color
   */
@@ -24,6 +32,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    vendor: ['axios'],
     /*
     ** Run ESLint on save
     */

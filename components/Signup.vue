@@ -20,8 +20,8 @@
                 </b-form-input>
             </b-form-group>
             <b-form-group label="Email"
-                          label-for="email">
-                <b-form-input id="email"
+                          label-for="emails">
+                <b-form-input id="emails"
                               type="email"
                               v-model="form.email"
                               required
@@ -38,32 +38,45 @@
                 </b-form-input>
             </b-form-group>
             <b-form-group label="Password"
-                          label-for="password">
-                <b-form-input id="password"
+                          label-for="passwords">
+                <b-form-input id="passwords"
                               type="password"
                               v-model="form.password"
                               required
                               placeholder="Password">
                 </b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="outline-success">Signup</b-button>
+            <b-button type="submit" @click.prevent="register()" variant="outline-success">Signup</b-button>
         </b-form>
     </div>
 </template>
 
 <script>
+import { SIGNUP } from "../config";
 export default {
-    data() {
-        return {
-            form: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                username: '',
-                password: ''
-            }
-        }
+  data() {
+    return {
+      form: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        username: "",
+        password: ""
+      }
+    };
+  },
+  async mounted() {
+    this.formData = new FormData();
+  },
+  methods: {
+    async register() {
+      const { data } = await this.$axios.post(SIGNUP, this.form);
+      await this.$store.dispatch("login", {
+        email: this.form.email,
+        password: this.form.password
+      });
     }
-}
+  }
+};
 </script>
 

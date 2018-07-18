@@ -11,13 +11,12 @@
                 <b-navbar-nav>
                 <b-nav-item to="track">Track Websites</b-nav-item>
                 <b-nav-item to="new">Add Websites</b-nav-item>
-                <b-nav-item to="update">Update Websites</b-nav-item>
-                <b-nav-item to="delete">Delete Websites</b-nav-item>
+                <b-nav-item to="edit">Update Websites</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-item @click="logoutUser">Logout</b-nav-item>
+                    <b-nav-item @click.prevent="logoutUser">Logout</b-nav-item>
                 </b-navbar-nav>
 
             </b-collapse>
@@ -29,8 +28,8 @@
 <script>
 export default {
     methods: {
-        logoutUser() {
-
+        async logoutUser() {
+            await this.$store.dispatch('logout');
         }
     }
 };
